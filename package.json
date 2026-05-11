@@ -1,0 +1,13 @@
+{
+  "name": "rcc-tools",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": { "rcc": "./src/index.js" },
+  "scripts": {
+    "test": "node --test --test-reporter=spec tests/git.test.js tests/excel.test.js"
+  },
+  "dependencies": {
+    "commander": "^12",
+    "exceljs": "^4"
+  }
+}

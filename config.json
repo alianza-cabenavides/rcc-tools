@@ -1,0 +1,5 @@
+{
+  "baseBranch": "master",
+  "templatePath": "./templates/template-front.xlsx",
+  "outputPath": "./output"
+}
