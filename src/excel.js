@@ -54,7 +54,6 @@ export async function generateRCC({ code, title, developer, repository, tagIniti
     row.commit();
   });
 
-  // Ensure output directory exists
   fs.mkdirSync(path.resolve(outputPath), { recursive: true });
 
   const fileName = `FM-RG-CONTROL DE CAMBIOS ${code} V1 Front ${repository}.xlsx`;

@@ -60,10 +60,7 @@ program
         console.log(`Archivos modificados: ${files.length}`);
       }
 
-      // 4. Commit range
-      // const { initial, final } = getCommitRange(config.baseBranch);
-
-      // 5. Interactive prompts
+      // 4. Interactive prompts
       const rl = createInterface({ input: process.stdin, output: process.stdout });
       const defaultDeveloper = getGitUserName();
       const repository = getRepositoryName();
@@ -81,11 +78,9 @@ program
       let tagInitial = '';
       let tagFinal = '';
 
-      // let tagsToPush = [];
-
       ({ tagInitial, tagFinal } = createTags(code, type));
 
-      // 7b. Generate Excel
+      // 5. Generate Excel
       console.log('Generando documento RCC...');
       const outFileFinal = await generateRCC({
         code,
@@ -99,7 +94,7 @@ program
         outputPath: path.resolve(__dirname, '..', config.outputPath),
       });
 
-      // 9. Summary
+      // 6. Summary
       console.log('\n✔ Proceso completado:');
       console.log(`  Documento : ${outFileFinal}`);
       console.log(`  Archivos   : ${files.length}`);
