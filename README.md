@@ -23,7 +23,7 @@ Al ejecutar `rcc generate` desde cualquier repositorio de trabajo, el CLI:
 ## Instalación
 
 ```bash
-git clone https://github.com/CarlosBean/rcc-tools.git
+git clone https://github.com/alianza-cabenavides/rcc-tools.git
 cd rcc-tools
 npm install
 npm link
@@ -47,7 +47,7 @@ Edita `config.json` en la raíz del proyecto según tu entorno:
 
 ```json
 {
-  "baseBranch": "main",
+  "baseBranch": "master",
   "templatePath": "./templates/template-front.xlsx",
   "outputPath": "./output"
 }

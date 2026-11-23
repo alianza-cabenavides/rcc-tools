@@ -31,6 +31,7 @@ before(() => {
   writeFileSync(join(repoDir, 'README.md'), 'initial');
   g('git add README.md', repoDir);
   g('git commit -m "initial commit"', repoDir);
+  g('git branch -M main', repoDir);
 
   // RQ feature branch with two commits
   g('git checkout -b RQ1234-feature', repoDir);
@@ -55,6 +56,9 @@ before(() => {
 
   // Push all branches to remote
   g('git push origin main RQ1234-feature GP5678-hotfix', repoDir);
+
+  // Force tests to use remote base branch (origin/main), not local main.
+  g('git branch -D main', repoDir);
 
   process.chdir(repoDir);
 });
@@ -119,11 +123,12 @@ describe('getBranchInfo', () => {
   });
 
   it('throws on branch that does not match RQ/GP pattern', () => {
-    g('git checkout main', repoDir);
+    g('git checkout -B test-non-rq-gp origin/main', repoDir);
     try {
       assert.throws(() => getBranchInfo(), /does not match expected pattern/);
     } finally {
       g('git checkout RQ1234-feature', repoDir);
+      g('git branch -D test-non-rq-gp', repoDir);
     }
   });
 });
@@ -140,7 +145,7 @@ describe('getDiffSummary', () => {
   });
 
   it('returns empty array when branch has no changes vs base', () => {
-    g('git checkout main', repoDir);
+    g('git checkout --detach origin/main', repoDir);
     try {
       const files = getDiffSummary('main');
       assert.deepEqual(files, []);
@@ -162,7 +167,7 @@ describe('getCommitRange', () => {
   });
 
   it('throws when there are no commits ahead of base', () => {
-    g('git checkout main', repoDir);
+    g('git checkout --detach origin/main', repoDir);
     try {
       assert.throws(() => getCommitRange('main'), /No commits found/);
     } finally {

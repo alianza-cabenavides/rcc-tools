@@ -28,14 +28,29 @@ export function getBranchInfo() {
   return { branch, code, type };
 }
 
-export function getDiffSummary(base) {
-  let output;
+function getRemoteBaseRef(base) {
+  return base.startsWith('origin/') ? base : `origin/${base}`;
+}
 
+function fetchOrigin() {
   try {
-    output = exec(`git diff ${base}...HEAD --name-status`);
+    exec('git fetch origin --prune');
 
   } catch {
-    throw new Error(`Failed to diff against base branch "${base}". Make sure "${base}" exists.`);
+    throw new Error('Failed to update remote references from "origin". Make sure the remote exists and you have access.');
+  }
+}
+
+export function getDiffSummary(base) {
+  let output;
+  const remoteBase = getRemoteBaseRef(base);
+  fetchOrigin();
+
+  try {
+    output = exec(`git diff ${remoteBase}...HEAD --name-status`);
+
+  } catch {
+    throw new Error(`Failed to diff against remote base branch "${remoteBase}". Make sure it exists and run "git fetch origin".`);
   }
 
   if (!output) return [];
@@ -48,12 +63,14 @@ export function getDiffSummary(base) {
 
 export function getCommitRange(base) {
   let output;
+  const remoteBase = getRemoteBaseRef(base);
+  fetchOrigin();
 
   try {
-    output = exec(`git log ${base}..HEAD --pretty=format:"%H %s" --no-merges`);
+    output = exec(`git log ${remoteBase}..HEAD --pretty=format:"%H %s" --no-merges`);
 
   } catch {
-    throw new Error(`Failed to get commit log from "${base}".`);
+    throw new Error(`Failed to get commit log from remote base branch "${remoteBase}".`);
   }
 
   if (!output) throw new Error('No commits found ahead of base branch.');
